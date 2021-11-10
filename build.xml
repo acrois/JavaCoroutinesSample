@@ -1,0 +1,31 @@
+<project name="CoroutineTest" default="-post-compile" basedir=".">
+	<property name="src" location="src" />
+	<property name="lib" location="lib" />
+	<property name="build" location="build" />
+	<taskdef name="InstrumentTask" classname="com.offbynull.coroutines.antplugin.InstrumentTask">
+	    <classpath>
+	        <pathelement location="${lib}/ant-plugin-1.1.1-shaded.jar" />
+	    </classpath>
+	</taskdef>
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp/>
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}"/>
+	</target>
+	<target name="compile" depends="init" description="compile the source">
+		<path id="build.classpath">
+		    <fileset dir="${lib}">
+		        <include name="*.jar" />
+		    </fileset>
+		</path>
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath refid="build.classpath" />
+		</javac>
+	</target>
+	<target name="-post-compile" depends="compile">
+	    <!-- The classpath attribute is a semicolon delimited list of the classpath required by your code. -->
+	    <InstrumentTask classpath="" sourceDirectory="build" targetDirectory="build" />
+	</target>
+</project>
